@@ -161,7 +161,7 @@ void T3SPI::setFrameSize(uint8_t CTARn, uint8_t size) {
 void T3SPI::setMode(uint8_t CTARn, uint8_t dataMode) {
 	stop();
 	if (CTARn==0){
-		SPI0_CTAR0 = SPI0_CTAR0 & ~(SPI_CTAR_CPOL | SPI_CTAR_CPHA) | dataMode << 25;}
+	   	SPI0_CTAR0 = SPI0_CTAR0 & ~(SPI_CTAR_CPOL | SPI_CTAR_CPHA) | dataMode << 25;}
 	if (CTARn==1){
 		SPI0_CTAR1 = SPI0_CTAR1 & ~(SPI_CTAR_CPOL | SPI_CTAR_CPHA) | dataMode << 25;}
 	if (CTARn==2){
@@ -171,16 +171,16 @@ void T3SPI::setMode(uint8_t CTARn, uint8_t dataMode) {
 
 void T3SPI::setBitOrder(bool CTARn, uint8_t bo) {
 	stop();
-	if (CTARn==0){
-		if (bo == LSBFIRST) {
-			SPI0_CTAR0 |= SPI_CTAR_LSBFE;}
-		if (bo == MSBFIRST) {
-			SPI0_CTAR0 &= ~SPI_CTAR_LSBFE;}}
+	// Was incorrectly linking to #define MSBFIRST & LSBFIRST in *\Arduino\hardware...
+	// \teensy\cores\teensy3\core_pins.h Line 44 which is opposite logic defined in t3spi.h
+	if (CTARn == 0){
+		if (bo == LSB_FIRST)	SPI0_CTAR0 |= SPI_CTAR_LSBFE; 
+		if (bo == MSB_FIRST)	SPI0_CTAR0 &= ~SPI_CTAR_LSBFE;
+	}
 	if (CTARn==1){
-		if (bo == LSBFIRST) {
-			SPI0_CTAR1 |= SPI_CTAR_LSBFE;}
-		if (bo == MSBFIRST) {
-			SPI0_CTAR1 &= ~SPI_CTAR_LSBFE;}}
+		if (bo == LSB_FIRST)	SPI0_CTAR1 |= SPI_CTAR_LSBFE;
+		if (bo == MSB_FIRST) 	SPI0_CTAR1 &= ~SPI_CTAR_LSBFE;
+	}
 	start();
 }
 
